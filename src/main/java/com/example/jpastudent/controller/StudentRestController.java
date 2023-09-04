@@ -3,12 +3,13 @@ package com.example.jpastudent.controller;
 import com.example.jpastudent.model.Student;
 import com.example.jpastudent.repo.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class StudentRestController {
@@ -23,25 +24,61 @@ public class StudentRestController {
         return list;
     }
 
-    @GetMapping("/addstudent")
-    public List<Student> addStudent() {
-        Student student = new Student();
-        student.setBirthDate(LocalDate.now());
-        studentRepository.save(student);
-        var list = studentRepository.findAll();
-        return list;
+    @GetMapping("/studentid/{id}")
+    public ResponseEntity<Student> getStudent(@PathVariable int id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            return new ResponseEntity<>(student.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new Student(),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/student/{name}")
+    public ResponseEntity<Student> getStudentsByName(@PathVariable String name) {
+        Student student = studentRepository.findByName(name);
+        if (student != null) {
+            return new ResponseEntity<>(student, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/addstudent")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Student addStudent(@RequestBody Student student) {
+        return studentRepository.save(student);
+    }
+
+    @PutMapping("/addstudent/{id}")
+    public ResponseEntity<Student> putStudent(@PathVariable int id, @RequestBody Student student) {
+        Optional<Student> orgStudent = studentRepository.findById(id);
+        if (orgStudent.isPresent()) {
+            studentRepository.save(student);
+            return new ResponseEntity<>(student, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new Student(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/deletestudent/{id}")
+    public ResponseEntity<String> deleteStudent(@PathVariable int id) {
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            studentRepository.deleteById(id);
+            return ResponseEntity.ok("Student deleted with id:" + id);
+        } else {
+            //return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+        }
+
     }
 
 
-    @GetMapping("/students/{name}")
-    public List<Student> getStudentsByName(@PathVariable String name) {
-        return studentRepository.findAllByName(name);
-    }
-
-    @GetMapping("/studentsdate/{date}")
+    /*@GetMapping("/studentsdate/{date}")
     public List<Student> getStudentsByBirthDate(@PathVariable LocalDate date) {
         return studentRepository.findByBirthDate(date);
-    }
+    }*/
 
     /*@GetMapping("/student/{name}")
     public Student getStudentByName(@PathVariable String name) {

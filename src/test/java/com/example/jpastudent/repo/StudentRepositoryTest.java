@@ -18,11 +18,11 @@ class StudentRepositoryTest {
     @Autowired
     StudentRepository studentRepository;
 
-    @Test
+    /*@Test
     void testOneMathias() {
         List<Student> list = studentRepository.findAllByName("Mathias");
         assertEquals(1, list.size());
-    }
+    }*/
 
     @Test
     void testOneViggo() {

@@ -1,19 +1,20 @@
 package com.example.jpastudent.repo;
 
 import com.example.jpastudent.model.Student;
-import net.bytebuddy.asm.Advice;
+import com.example.jpastudent.repo.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-class StudentRepositoryTest {
+class JpaStudentApplicationTests {
+
+
 
     @Autowired
     StudentRepository studentRepository;
@@ -23,6 +24,10 @@ class StudentRepositoryTest {
         List<Student> list = studentRepository.findAllByName("Mathias");
         assertEquals(1, list.size());
     }*/
+
+    @Test
+    void contextLoads() {
+    }
 
     @Test
     void testOneViggo() {

@@ -1,9 +1,0 @@
-GET http://localhost:8080/studentsdate/1998-08-29
-Accept: application/json
-
-###
-GET http://localhost:8080/students/Mathias
-Accept: application/json
-
-###
-GET http://localhost:8080/students
